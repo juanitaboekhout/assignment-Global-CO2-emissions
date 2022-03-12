@@ -1,0 +1,88 @@
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+
+%load_ext google.colab.data_table
+
+tables = pd.read_html('https://en.wikipedia.org/wiki/List_of_countries_by_carbon_dioxide_emissions')
+countries = tables [1]
+
+
+countries.columns = ['country', 'em_1990', '2005', '2017', '2017 (% of world)', '2017 vs 1990 (% of world)', 'Per land area', 'Per capita', '2018 incl LUCF', '2018 excl LUCF']
+countries = tables [1]
+countries["change_1990_1990"] = (countries["em_1990"] / countries ["em_1990"]) * 100
+countries["change_2005_1990"] = (countries["2005"] / countries ["em_1990"]) * 100
+countries["change_2017_1990"] = (countries["2017"] / countries ["em_1990"]) * 100
+
+countries = countries.loc[3:212]
+countries.head(5)
+
+selectie_2017_1990 = countries.loc[:,["country","em_1990", "2005", "2017"]] 
+selectie_2017_1990.head(5)
+
+selectie_2017_1990_sorted = selectie_2017_1990.sort_values(by=["2017"], ascending=False)
+selectie_2017_1990_sorted.head(5)
+
+selectie_2017_1990_sorted = selectie_2017_1990_sorted.drop(index = 67, axis=0)
+selectie_2017_1990_sorted.head(5)
+
+first_5 = selectie_2017_1990_sorted.head(5)
+print(first_5)
+
+# grafiek 1: 5 landen met de grootste CO2 uitstoot
+fig, ax = plt.subplots(1, 1, figsize=(7.5,7.5))
+x = first_5.columns[1:4]
+y1 = first_5.iloc[0,1:4]
+y2 = first_5.iloc[1,1:4]
+y3 = first_5.iloc[2,1:4]
+y4 = first_5.iloc[3,1:4]
+y5 = first_5.iloc[4,1:4]
+l1 = first_5.iloc[0,0]
+l2 = first_5.iloc[1,0]
+l3 = first_5.iloc[2,0]
+l4 = first_5.iloc[3,0]
+l5 = first_5.iloc[4,0]
+ax.plot(x,y1,label=l1)
+ax.plot(x,y2,label=l2)
+ax.plot(x,y3,label=l3)
+ax.plot(x,y4,label=l4)
+ax.plot(x,y5,label=l5)
+ax.legend()
+ax.set_xlabel('year')
+ax.set_ylabel('CO2 emission countries') 
+ax.set_title("Countries biggest CO2 emission")   
+plt.show()
+
+
+change_1990_1990 = countries.iloc[0][1] 
+change_2005_1990 = countries.iloc[0][2]
+change_2017_1990 = countries.iloc[0][3]
+print(f"relative change 1990 to 2005: {round(change_2005_1990/change_1990_1990 * 100,2)}%\nrelative change 1990 to 2017: {round(change_2017_1990/change_1990_1990 * 100,2)}%")
+
+relative_2017_sort = countries.sort_values(by=['change_2017_1990'], ascending=False)
+relative_2017_sort.head(3)
+
+relative_2017_sort.tail(3)
+
+# grafiek van top 3 landen met relatieve uitstoot
+fig = plt.figure()
+ax = fig.add_axes([0,0,1.5,2])
+x_1 = relative_2017_sort.columns[10:13]
+y_1 = relative_2017_sort.iloc[0,[10,11,12]]
+y_2 = relative_2017_sort.iloc[1,[10,11,12]]
+y_3 = relative_2017_sort.iloc[2,[10,11,12]]
+y_4 = relative_2017_sort.iloc[206,[10,11,12]]
+y_5 = relative_2017_sort.iloc[207,[10,11,12]]
+y_6 = relative_2017_sort.iloc[208,[10,11,12]]
+l1 = relative_2017_sort.iloc[0,0]
+ax.plot(x_1,y_1,label=relative_2017_sort.iloc[0,0])
+ax.plot(x_1,y_2,label=relative_2017_sort.iloc[1,0])
+ax.plot(x_1,y_3,label=relative_2017_sort.iloc[2,0])
+ax.plot(x_1,y_4,label=relative_2017_sort.iloc[206,0])
+ax.plot(x_1,y_5,label=relative_2017_sort.iloc[207,0])
+ax.plot(x_1,y_6,label=relative_2017_sort.iloc[208,0])
+ax.set_xlabel("countries")
+ax.set_ylabel("relative CO2 emission")
+ax.set_title("worst and best relative changers")
+ax.legend()
+plt.show()
