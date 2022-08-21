@@ -1,0 +1,187 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+import numpy.polynomial.polynomial as poly  
+
+#vraag 1: What is the biggest predictor of a large CO2 output per capita of a country?
+em_sector = pd.read_csv('/content/ghg-emissions-by-sector.csv') 
+em_sector.head()
+
+em_sector = em_sector[['Entity','Year','Agriculture','Waste','Industry','Manufacturing and construction','Transport','Electricity and heat','Buildings','Aviation ad shipping']]
+em_sector
+
+em_sector_world = em_sector.loc[(em_sector.Entity == 'World')]
+em_sector_world.head()
+
+em_sector_world.set_index('Year')
+em_sector_world.head()
+
+# grafiek vraag 1
+fig, ax = plt.subplots()
+years = list(em_sector_world["Year"])
+sectorNames = list(em_sector_world.columns[2:10])
+sectorEmissions = em_sector_world.iloc[:,2:10]
+
+ax.plot(years, sectorEmissions)
+plt.title("Emission per sector")
+plt.xlabel("Year")
+plt.ylabel("CO2_emission")
+plt.legend(sectorNames, loc='center left', bbox_to_anchor=(1, 0.5))
+plt.show()
+
+#conclusie vraag 1
+#Voor deze vraag heb ik sectoren vergeleken en gekeken welke sector de meeste CO2 uitstoot geeft.
+#Electriciteit en verwarming geven de meeste CO2 uitstoot ten opzichte van de andere sectoren in de vergelijking.
+#Hierna is transport de sector die de meeste CO2 uitstoot geeft.
+
+#Vraag 2:which countries are making the biggest strides in decreasing CO2 output?
+
+biggest_strides_co2 = pd.read_csv('/content/co-emissions-per-capita.csv')
+biggest_strides_co2
+
+biggest_strides_2000_2020 = biggest_strides_co2.loc[(biggest_strides_co2.Year == 2000) |(biggest_strides_co2.Year == 2020)]
+biggest_strides_2000_2020
+
+pivot = biggest_strides_2000_2020.pivot(index='Entity',columns='Year',values='Annual CO2 emissions (per capita)').reset_index()
+pivot
+
+pivot.columns = ['country', '_2000', '_2020']
+pivot
+
+pivot['change'] = pivot._2020 / pivot._2000 * 100
+pivot
+
+biggest_strides_2000_2020 = pivot.sort_values(by=["change"], ascending=True)
+biggest_strides_2000_2020.head(5)
+
+#conclusie vraag 2:
+# Aruba heeft de minste toename gehad in co2 uitstoot tussen 2000 en 2020, terwijl andere landen veel meer gestegen zijn in co2 uitstoot 
+#dus is het land wat het beste resultaat heeft bereikt
+#hierna hebben Noord Korea, Yemen, Arabische Emiraten en dan Denemarken de minste toename in co2 bereikt.
+
+#3:Which non-fossil fuel energy technology will have the best price in the future?
+
+levelized_costs = pd.read_csv('/content/levelized-cost-of-energy.csv') 
+levelized_costs.head()
+
+levelized_costs.drop(['Code','CSP LCOE (2019 USD/kWh)','Geothermal LCOE (2019 USD/kWh)'],axis=1, inplace = True)
+
+levelized_costs.head()
+
+renewables_2010_2020 = levelized_costs[levelized_costs['Year'] >= 2010].sort_values(by=["Year"], ascending=False)
+renewables_2010_2020.head()
+
+# grafiek vraag 3
+sectorRenewable = list(renewables_2010_2020.columns[2:7])
+sectorPrice = renewables_2010_2020.iloc[:,2:7]
+
+fig, ax = plt.subplots()
+world = renewables_2010_2020[renewables_2010_2020["Entity"]=="World"]
+world.drop(["Entity"], inplace = True, axis = 1)
+world.set_index("Year", inplace = True)
+ax.plot(world)
+plt.title("Price renewables per sector")
+plt.xlabel("Year")
+plt.ylabel("Price")
+plt.legend(sectorRenewable, loc='center left', bbox_to_anchor=(1, 0.5))
+plt.show()
+
+#Hydro
+X = np.array(world.index).reshape(-1,1)
+y = world['Hydro LCOE (2019 USD/kWh)']
+
+from sklearn.linear_model import LinearRegression
+linear_regressor = LinearRegression() 
+linear_regressor.fit(X, y)  
+
+years = np.arange(2010, 2031).reshape(-1,1)    
+predicted_prices = linear_regressor.predict(years)   
+fig,ax = plt.subplots()                                
+plt.plot(X,y)                                          
+plt.plot(years, predicted_prices)
+plt.title("Hydro energy")
+plt.xlabel("Year")
+plt.ylabel("Price")
+plt.grid()
+plt.show()
+
+#Solar
+X = np.array(world.index).reshape(-1,1)
+y = world['Solar LCOE (2019 USD/kWh)']
+
+from sklearn.linear_model import LinearRegression
+linear_regressor = LinearRegression() 
+linear_regressor.fit(X, y)  
+
+years = np.arange(2010, 2031).reshape(-1,1)    
+predicted_prices = linear_regressor.predict(years)   
+fig,ax = plt.subplots()                                
+plt.plot(X,y)                                          
+plt.plot(years, predicted_prices)
+plt.title("Solar energy")
+plt.xlabel("Year")
+plt.ylabel("Price")
+plt.grid()
+plt.show()
+#Onshore wind 
+X = np.array(world.index).reshape(-1,1)
+y = world['Onshore wind LCOE (2019 USD/kWh)']
+
+from sklearn.linear_model import LinearRegression
+linear_regressor = LinearRegression() 
+linear_regressor.fit(X, y)  
+
+years = np.arange(2010, 2031).reshape(-1,1)    
+predicted_prices = linear_regressor.predict(years)   
+fig,ax = plt.subplots()                                
+plt.plot(X,y)                                          
+plt.plot(years, predicted_prices)
+plt.title("Onshore wind energy")
+plt.xlabel("Year")
+plt.ylabel("Price")
+plt.grid()
+plt.show()
+
+#Bioenergy
+X = np.array(world.index).reshape(-1,1)
+y = world['Bioenergy LCOE (2019 USD/kWh)']
+
+from sklearn.linear_model import LinearRegression
+linear_regressor = LinearRegression() 
+linear_regressor.fit(X, y)  
+
+years = np.arange(2010, 2031).reshape(-1,1)    
+predicted_prices = linear_regressor.predict(years)   
+fig,ax = plt.subplots()                                
+plt.plot(X,y)                                          
+plt.plot(years, predicted_prices)
+plt.title("Bio energy")
+plt.xlabel("Year")
+plt.ylabel("Price")
+plt.grid()
+plt.show()
+
+#Offshore wind
+X = np.array(world.index).reshape(-1,1)
+y = world['Offshore wind LCOE (2019 USD/kWh)']
+
+from sklearn.linear_model import LinearRegression
+linear_regressor = LinearRegression() 
+linear_regressor.fit(X, y)  
+
+years = np.arange(2010, 2031).reshape(-1,1)    
+predicted_prices = linear_regressor.predict(years)   
+fig,ax = plt.subplots()                                
+plt.plot(X,y)                                          
+plt.plot(years, predicted_prices)
+plt.title("Offshore wind energy")
+plt.xlabel("Year")
+plt.ylabel("Price")
+plt.grid()
+plt.show()
+
+#Conclusie vraag 3: Which non-fossil fuel energy technology will have the best price in the future?
+#In de eerste grafiek waarbij alle soorten renewables in een keer te zien zijn zie je dat solar energie snel omlaag gaat. 
+#Om lineaire regressie goed zichtbaar te maken, heb ik aparte grafieken gemaakt per soort renewable waardoor het verloop van de regressielijn op alle onderdelen goed te zien is.
+#In de losse grafieken zie je ook dat solar energie het snelst omlaag gaat in prijs en het snelst onder 0 gaat. Solar energie zal dus de beste prijs hebben in de toekomst.
