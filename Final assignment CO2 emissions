@@ -31,25 +31,8 @@ multiple_predictors
 correlation_multiple_predictors = multiple_predictors.dropna().corr()
 correlation_multiple_predictors
 
-Energie heeft de grootste correlatie met CO2 en is de grootste predictor vergeleken met populatie en gdp. Zowel energy_per_capita als primary_energy_consumption hebben de hoogste correlatie. Dus energie heeft in totaal gezien de grootste invloed op CO2 uitstoot.
+Conclusie vraag 1: Energie heeft de grootste correlatie met CO2 en is de grootste predictor vergeleken met populatie en gdp. Zowel energy_per_capita als primary_energy_consumption hebben de hoogste correlatie. Dus energie heeft in totaal gezien de grootste invloed op CO2 uitstoot.
 
-# grafiek vraag 1
-fig, ax = plt.subplots()
-years = list(em_sector_world["Year"])
-sectorNames = list(em_sector_world.columns[2:10])
-sectorEmissions = em_sector_world.iloc[:,2:10]
-
-ax.plot(years, sectorEmissions)
-plt.title("Emission per sector")
-plt.xlabel("Year")
-plt.ylabel("CO2_emission")
-plt.legend(sectorNames, loc='center left', bbox_to_anchor=(1, 0.5))
-plt.show()
-
-#conclusie vraag 1
-#Voor deze vraag heb ik sectoren vergeleken en gekeken welke sector de meeste CO2 uitstoot geeft.
-#Electriciteit en verwarming geven de meeste CO2 uitstoot ten opzichte van de andere sectoren in de vergelijking.
-#Hierna is transport de sector die de meeste CO2 uitstoot geeft.
 
 #Vraag 2:which countries are making the biggest strides in decreasing CO2 output?
 
