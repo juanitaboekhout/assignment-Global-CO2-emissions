@@ -4,18 +4,34 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import numpy.polynomial.polynomial as poly  
 
+vraag 1: What is the biggest predictor of a large CO2 output per capita of a country?
+
+Hiervoor kijk ik naar de correlatie tussen co2 uitstoot en predictors. Waarbij ik kijk naar welke predictor de grootste correlatie heeft dus het meeste leidt tot CO2 uitstoot.
 #vraag 1: What is the biggest predictor of a large CO2 output per capita of a country?
-em_sector = pd.read_csv('/content/ghg-emissions-by-sector.csv') 
-em_sector.head()
 
-em_sector = em_sector[['Entity','Year','Agriculture','Waste','Industry','Manufacturing and construction','Transport','Electricity and heat','Buildings','Aviation ad shipping']]
-em_sector
+predictor = pd.read_csv('/content/owid-co2-data.csv') 
+predictor.head()
 
-em_sector_world = em_sector.loc[(em_sector.Entity == 'World')]
-em_sector_world.head()
+predictor.columns
 
-em_sector_world.set_index('Year')
-em_sector_world.head()
+#World eruit halen om op landniveau te bekijken
+predictor_co2 = predictor.loc[(predictor.country != 'World')]
+predictor_co2.head()
+
+#Correlatie berekenen over alle factoren / predictors, dus over het hele dataframe om een algemeen beeld te vormen en zo alle mogelijke predictors mee te kunnen nemen en te zien welke echt de beste is
+correlation_predictor_co2 = predictor_co2.dropna().corr()
+correlation_predictor_co2
+
+Conclusie: wanneer ik de correlatie algemeen bekijk heeft primary energy consumption de hoogste correlatie met CO2 uitstoot (0.996071) dus is een goede voorspeller van CO2 uitstoot en t.o.v. de andere predictors de beste predictor. Hierna komt gdp. In de opdracht wordt specifiek gevraagd naar CO2 per capita. ghg_excluding_lucf_per_capita heeft hierbij de grootste correlatie met CO2 per capita t.o.v. de andere predictors (0.913186) waarna ook energy per capita een hoge correlatie heeft.
+
+#Vanuit mijn interesse - achtergrond en om het wat diepgaander te bekijken wil ik nog apart belichten wat de beste predictor is tussen energie, populatie en gdp. 
+multiple_predictors = predictor_co2[['country','co2', 'co2_per_capita', 'gdp','energy_per_capita','primary_energy_consumption','population']]
+multiple_predictors
+
+correlation_multiple_predictors = multiple_predictors.dropna().corr()
+correlation_multiple_predictors
+
+Energie heeft de grootste correlatie met CO2 en is de grootste predictor vergeleken met populatie en gdp. Zowel energy_per_capita als primary_energy_consumption hebben de hoogste correlatie. Dus energie heeft in totaal gezien de grootste invloed op CO2 uitstoot.
 
 # grafiek vraag 1
 fig, ax = plt.subplots()
