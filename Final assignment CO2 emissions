@@ -31,8 +31,7 @@ multiple_predictors
 correlation_multiple_predictors = multiple_predictors.dropna().corr()
 correlation_multiple_predictors
 
-Conclusie vraag 1: Energie heeft de grootste correlatie met CO2 en is de grootste predictor vergeleken met populatie en gdp. Zowel energy_per_capita als primary_energy_consumption hebben de hoogste correlatie. Dus energie heeft in totaal gezien de grootste invloed op CO2 uitstoot.
-
+Conclusie verdieping vraag 1: Energie heeft de grootste correlatie met CO2 en is de grootste predictor vergeleken met populatie en gdp. Zowel energy_per_capita als primary_energy_consumption hebben de hoogste correlatie. Dus energie heeft in totaal gezien de grootste invloed op CO2 uitstoot.
 
 #Vraag 2:which countries are making the biggest strides in decreasing CO2 output?
 
@@ -54,10 +53,10 @@ pivot
 biggest_strides_2000_2020 = pivot.sort_values(by=["change"], ascending=True)
 biggest_strides_2000_2020.head(5)
 
-#conclusie vraag 2:
-# Aruba heeft de minste toename gehad in co2 uitstoot tussen 2000 en 2020, terwijl andere landen veel meer gestegen zijn in co2 uitstoot 
-#dus is het land wat het beste resultaat heeft bereikt
-#hierna hebben Noord Korea, Yemen, Arabische Emiraten en dan Denemarken de minste toename in co2 bereikt.
+
+Conclusie vraag 2: Which countries are making the biggest strides in decreasing CO2 output?
+
+Voor deze vraag heb ik de verandering bekeken tussen 2000 en 2020, welke landen de minste verandering in toename in CO2 uitstoot hebben gehad tussen 2000 en 2020. Aruba heeft de minste toename gehad in co2 uitstoot tussen 2000 en 2020, terwijl andere landen veel meer gestegen zijn in co2 uitstoot heeft Aruba gezorgd dat de CO2 uitstoot zo weinig mogelijk toegenomen is, dus is het land wat het beste resultaat heeft bereikt. Hierna hebben Noord Korea, Yemen, Arabische Emiraten en dan Denemarken de minste toename in CO2 bereikt.
 
 #3:Which non-fossil fuel energy technology will have the best price in the future?
 
